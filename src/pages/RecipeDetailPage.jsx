@@ -127,12 +127,12 @@ export default function RecipeDetailPage() {
                       href={ing.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-1 border border-gray-300 px-2 py-1 rounded-md text-[13px] text-black"
+                      className="flex items-center space-x-1 border border-gray-300 px-2 py-[2px] rounded-md text-[11px] text-black"
                     >
                       <img
                         src="/src/assets/recipe/cart.png"
                         alt="cart"
-                        className="w-4 h-4"
+                        className="w-3 h-3"
                       />
                       <span>구매</span>
                     </a>
