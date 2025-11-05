@@ -49,13 +49,13 @@ export default function RecipeDetailPage() {
     ],
   };
 
-  // ✅ 리뷰 관련 상태
+  // 리뷰 관련 상태
   const [reviews, setReviews] = useState(recipe.reviews);
   const [newReview, setNewReview] = useState("");
   const [editId, setEditId] = useState(null);
   const [editText, setEditText] = useState("");
 
-  // ✅ 리뷰 등록
+  // 리뷰 등록
   const handleAddReview = () => {
     if (!newReview.trim()) return;
     const newEntry = {
@@ -68,18 +68,18 @@ export default function RecipeDetailPage() {
     setNewReview("");
   };
 
-  // ✅ 리뷰 삭제
+  // 리뷰 삭제
   const handleDeleteReview = (id) => {
     setReviews(reviews.filter((r) => r.id !== id));
   };
 
-  // ✅ 수정모드 진입
+  // 수정모드 진입
   const handleEditClick = (id, text) => {
     setEditId(id);
     setEditText(text);
   };
 
-  // ✅ 수정 완료
+  // 수정 완료
   const handleEditSave = (id) => {
     setReviews(
       reviews.map((r) => (r.id === id ? { ...r, text: editText } : r))
