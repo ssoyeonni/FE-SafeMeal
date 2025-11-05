@@ -5,9 +5,14 @@ export default function BottomNav({ active }) {
     <nav className="flex justify-around items-center bg-[#FBFBFB] py-3 shadow-[0_-2px_4px_rgba(0,0,0,0.05)]">
       <NavItem
         to="/danger-food"
-        src="/src/assets/danger-icon-black.png"
+        src={
+          active === "dangerFood"
+            ? "/src/assets/danger-icon-orange.png"
+            : "/src/assets/danger-icon-black.png"
+        }
         label="위험 식품"
         active={active === "dangerFood"}
+        activeColor="#EB8601"
       />
       <NavItem
         to="/"

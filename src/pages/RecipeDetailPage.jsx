@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
 
 export default function RecipeDetailPage() {
   const navigate = useNavigate();
@@ -11,8 +12,7 @@ export default function RecipeDetailPage() {
     color: "bg-[#BBE491]/50",
     name: "두부 곤약 나물 비빔밥",
     kcal: 225,
-    image:
-      "https://cdn-icons-png.flaticon.com/512/706/706164.png",
+    image: "https://cdn-icons-png.flaticon.com/512/706/706164.png",
     nutrients: {
       열량: "225 kcal",
       탄수화물: "26 g",
@@ -49,6 +49,45 @@ export default function RecipeDetailPage() {
     ],
   };
 
+  // ✅ 리뷰 관련 상태
+  const [reviews, setReviews] = useState(recipe.reviews);
+  const [newReview, setNewReview] = useState("");
+  const [editId, setEditId] = useState(null);
+  const [editText, setEditText] = useState("");
+
+  // ✅ 리뷰 등록
+  const handleAddReview = () => {
+    if (!newReview.trim()) return;
+    const newEntry = {
+      id: Date.now(),
+      user: "익명 사용자",
+      text: newReview,
+      date: new Date().toISOString().split("T")[0],
+    };
+    setReviews([newEntry, ...reviews]);
+    setNewReview("");
+  };
+
+  // ✅ 리뷰 삭제
+  const handleDeleteReview = (id) => {
+    setReviews(reviews.filter((r) => r.id !== id));
+  };
+
+  // ✅ 수정모드 진입
+  const handleEditClick = (id, text) => {
+    setEditId(id);
+    setEditText(text);
+  };
+
+  // ✅ 수정 완료
+  const handleEditSave = (id) => {
+    setReviews(
+      reviews.map((r) => (r.id === id ? { ...r, text: editText } : r))
+    );
+    setEditId(null);
+    setEditText("");
+  };
+
   return (
     <div className="relative min-h-screen bg-[#F6F6F6] font-['Noto_Sans_KR'] flex flex-col">
       {/* Header (RecipePage와 동일 디자인 + back 버튼 추가) */}
@@ -58,11 +97,7 @@ export default function RecipeDetailPage() {
           onClick={() => navigate("/")}
           className="absolute left-4 flex items-center"
         >
-          <img
-            src="/src/assets/recipe/back.png"
-            alt="back"
-            className="w-5 h-5"
-          />
+          <img src="/src/assets/recipe/back.png" alt="back" className="w-3 h-4" />
         </button>
 
         {/* 기존 RecipePage와 동일 */}
@@ -159,9 +194,14 @@ export default function RecipeDetailPage() {
             <hr className="border-[#E5E5E5] mb-2" />
             <textarea
               placeholder="리뷰를 입력하세요."
+              value={newReview}
+              onChange={(e) => setNewReview(e.target.value)}
               className="w-full border border-gray-300 rounded-md p-2 text-[14px] h-24 focus:outline-none"
             />
-            <button className="w-full mt-2 bg-black text-white py-2 rounded-md text-[14px]">
+            <button
+              onClick={handleAddReview}
+              className="w-full mt-2 bg-black text-white py-2 rounded-md text-[14px]"
+            >
               리뷰 등록
             </button>
           </section>
@@ -169,9 +209,9 @@ export default function RecipeDetailPage() {
           {/* 리뷰 리스트 */}
           <section className="mt-6">
             <h2 className="font-medium text-[15px] text-black mb-2">
-              리뷰 ({recipe.reviews.length})
+              리뷰 ({reviews.length})
             </h2>
-            {recipe.reviews.map((r) => (
+            {reviews.map((r) => (
               <div
                 key={r.id}
                 className="bg-[#F6F6F6] p-3 rounded-md mb-2 text-[14px]"
@@ -182,17 +222,38 @@ export default function RecipeDetailPage() {
                     <img
                       src="/src/assets/recipe/pencil.png"
                       alt="edit"
-                      className="w-4 h-4"
+                      className="w-4 h-4 cursor-pointer"
+                      onClick={() => handleEditClick(r.id, r.text)}
                     />
                     <img
                       src="/src/assets/recipe/trashcan.png"
                       alt="delete"
-                      className="w-4 h-4"
+                      className="w-4 h-4 cursor-pointer"
+                      onClick={() => handleDeleteReview(r.id)}
                     />
                   </div>
                 </div>
-                <p className="text-gray-700">{r.text}</p>
-                <p className="text-gray-400 text-[12px] mt-1">{r.date}</p>
+
+                {editId === r.id ? (
+                  <>
+                    <textarea
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                      className="w-full border border-gray-300 rounded-md p-2 text-[14px] h-20 focus:outline-none"
+                    />
+                    <button
+                      onClick={() => handleEditSave(r.id)}
+                      className="w-full mt-2 bg-black text-white py-1 rounded-md text-[13px]"
+                    >
+                      수정 완료
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-gray-700">{r.text}</p>
+                    <p className="text-gray-400 text-[12px] mt-1">{r.date}</p>
+                  </>
+                )}
               </div>
             ))}
           </section>
