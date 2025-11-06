@@ -27,9 +27,14 @@ export default function BottomNav({ active }) {
       />
       <NavItem
         to="/short-form"
-        src="/src/assets/short-icon-black.png"
+        src={
+          active === "shortForm"
+            ? "/src/assets/short-icon-orange.png"
+            : "/src/assets/short-icon-black.png"
+        }
         label="숏폼"
         active={active === "shortForm"}
+        activeColor="#EB8601"
       />
     </nav>
   );
