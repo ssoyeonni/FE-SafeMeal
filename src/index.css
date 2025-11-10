@@ -1,3 +1,51 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .bg-primary {
+    background-color: #0C4A6E;
+  }
+  .bg-primary-90 {
+    background-color: rgb(12 74 110 / 0.9); /* hover용 */
+  }
+  .bg-secondary {
+    background-color: #E24E1B;
+  }
+  .bg-accent {
+    background-color: #BBE491;
+  }
+  .bg-light {
+    background-color: #FEFDFC;
+  }
+  .bg-grayBg {
+    background-color: #F6F6F6;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white rounded-md py-2 px-3 text-[14px] transition-all;
+  }
+
+  /* ✅ hover용 수동 적용 */
+  .btn-primary:hover {
+    @apply bg-primary-90;
+  }
+
+  .btn-outline {
+    @apply border border-gray-300 rounded-md text-[11px] px-2 py-[2px] text-black hover:bg-gray-100 transition-all;
+  }
+
+  .card-base {
+    @apply bg-light rounded-xl p-4 shadow-sm;
+  }
+
+  .section-title {
+    @apply font-medium text-[15px] text-black mb-2;
+  }
+
+  .input-box {
+    @apply w-full border border-gray-300 rounded-md p-2 text-[14px] focus:outline-none;
+  }
+}

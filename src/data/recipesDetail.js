@@ -1,5 +1,5 @@
 // 더미 데이터
-export const recipeDetail = {
+export const recipesDetail  = {
   id: 1,
   category: "밥",
   color: "bg-[#BBE491]/50",
