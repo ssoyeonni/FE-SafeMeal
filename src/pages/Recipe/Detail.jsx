@@ -1,53 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
+import { recipesDetail } from "../../data/recipesDetail";
 
 export default function RecipeDetailPage() {
   const navigate = useNavigate();
   const { id } = useParams();
 
   // 더미 데이터
-  const recipe = {
-    id,
-    category: "밥",
-    color: "bg-[#BBE491]/50",
-    name: "두부 곤약 나물 비빔밥",
-    kcal: 225,
-    image: "https://cdn-icons-png.flaticon.com/512/706/706164.png",
-    nutrients: {
-      열량: "225 kcal",
-      탄수화물: "26 g",
-      단백질: "14 g",
-      지방: "7 g",
-      나트륨: "97 mg",
-    },
-    ingredients: [
-      { name: "두부", buyable: true, link: "https://www.coupang.com" },
-      { name: "곤약잡곡밥", buyable: true, link: "https://www.coupang.com" },
-      { name: "콩나물", buyable: false },
-      { name: "표고버섯", buyable: false },
-      { name: "초고추장", buyable: true, link: "https://www.coupang.com" },
-      { name: "참기름", buyable: true, link: "https://www.coupang.com" },
-    ],
-    steps: [
-      "고사리는 상태에 따라 2~5시간 정도 불린 후 30분 정도 삶아 찬물에 헹구어 물기를 짠다.",
-      "콩나물은 다듬어 끓는 물에 데친 후 건져 식힌다.",
-      "불린 표고버섯은 물기를 짜서 채를 썰고, 당근·애호박은 길이 3cm 정도로 썰어 끓는 소금물에 데친다.",
-    ],
-    reviews: [
-      {
-        id: 1,
-        user: "김소연",
-        text: "정말 맛있어요! 집에서 쉽게 만들 수 있어서 좋습니다.",
-        date: "2025-10-29",
-      },
-      {
-        id: 2,
-        user: "장영웅",
-        text: "곤약밥이라서 부담 없이 먹기 좋아요.",
-        date: "2025-10-30",
-      },
-    ],
-  };
+  const recipe = recipesDetail;
 
   // 리뷰 관련 상태
   const [reviews, setReviews] = useState(recipe.reviews);
@@ -89,15 +49,19 @@ export default function RecipeDetailPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#F6F6F6] font-['Noto_Sans_KR'] flex flex-col">
+    <div className="relative min-h-screen bg-grayBg font-['Noto_Sans_KR'] flex flex-col">
       {/* Header (RecipePage와 동일 디자인 + back 버튼 추가) */}
-      <header className="fixed top-0 left-0 w-full z-20 bg-[#FEFDFC] shadow-sm shadow-black/10 flex justify-center items-center py-6">
+      <header className="fixed top-0 left-0 w-full z-20 bg-light shadow-sm shadow-black/10 flex justify-center items-center py-6">
         {/* Back 아이콘 (왼쪽 상단) */}
         <button
           onClick={() => navigate("/")}
           className="absolute left-4 flex items-center"
         >
-          <img src="/src/assets/recipe/back.png" alt="back" className="w-3 h-4" />
+          <img
+            src="/src/assets/recipe/back.png"
+            alt="back"
+            className="w-3 h-4"
+          />
         </button>
 
         {/* 기존 RecipePage와 동일 */}
@@ -112,8 +76,8 @@ export default function RecipeDetailPage() {
       </header>
 
       {/* 메인 컨텐츠 */}
-      <main className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-[#F6F6F6] mt-[84px] mb-[72px]">
-        <div className="bg-[#FEFDFC] rounded-xl p-4 shadow-sm">
+      <main className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-grayBg mt-[84px] mb-[72px]">
+        <div className="card-base">
           {/* 이미지 */}
           <img
             src={recipe.image}
@@ -179,7 +143,9 @@ export default function RecipeDetailPage() {
 
           {/* 조리법 */}
           <section className="mt-6">
-            <h2 className="font-medium text-[15px] text-black mb-2">[조리법]</h2>
+            <h2 className="font-medium text-[15px] text-black mb-2">
+              [조리법]
+            </h2>
             <hr className="border-[#E5E5E5] mb-2" />
             <ol className="list-decimal pl-4 space-y-2 text-[14px] text-black">
               {recipe.steps.map((step, i) => (
@@ -190,7 +156,9 @@ export default function RecipeDetailPage() {
 
           {/* 리뷰 작성 */}
           <section className="mt-6">
-            <h2 className="font-medium text-[15px] text-black mb-2">[리뷰 작성]</h2>
+            <h2 className="font-medium text-[15px] text-black mb-2">
+              [리뷰 작성]
+            </h2>
             <hr className="border-[#E5E5E5] mb-2" />
             <textarea
               placeholder="리뷰를 입력하세요."
@@ -200,7 +168,7 @@ export default function RecipeDetailPage() {
             />
             <button
               onClick={handleAddReview}
-              className="w-full mt-2 bg-black text-white py-2 rounded-md text-[14px]"
+              className="w-full mt-2 btn-primary"
             >
               리뷰 등록
             </button>
@@ -239,11 +207,11 @@ export default function RecipeDetailPage() {
                     <textarea
                       value={editText}
                       onChange={(e) => setEditText(e.target.value)}
-                      className="w-full border border-gray-300 rounded-md p-2 text-[14px] h-20 focus:outline-none"
+                      className="input-box h-24"
                     />
                     <button
                       onClick={() => handleEditSave(r.id)}
-                      className="w-full mt-2 bg-black text-white py-1 rounded-md text-[13px]"
+                      className="w-full mt-2 btn-primary text-[13px]"
                     >
                       수정 완료
                     </button>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Layout from "../components/Layout";
 import DangerFoodCard from "../components/DangerFoodCard";
 
 export default function DangerFoodPage() {
@@ -57,11 +56,7 @@ export default function DangerFoodPage() {
   }, []);
 
   return (
-    <Layout
-      title="위험식품"
-      iconSrc="/src/assets/danger-icon-black.png"
-      active="dangerFood"
-    >
+    <>
       {loading && <p className="text-center text-gray-500">불러오는 중...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
       {!loading && !error && dangerFoods.length === 0 && (
@@ -72,6 +67,6 @@ export default function DangerFoodPage() {
       {dangerFoods.map((item) => (
         <DangerFoodCard key={item.id} item={item} />
       ))}
-    </Layout>
+    </>
   );
 }
