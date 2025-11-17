@@ -51,7 +51,7 @@ function MainContent() {
   return (
     <main
       className={`flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-grayBg ${
-        isRecipeDetail ? "mt-0 px-1 py-1" : "mt-[72px]"
+        isRecipeDetail ? "mt-0 px-0 py-0" : "mt-[72px]"
       } mb-[60px]`}
     >
       <Routes>

@@ -1,52 +1,151 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
-import { recipesDetail } from "../../data/recipesDetail";
+import { useEffect, useState } from "react";
+import { getRecipeDetail } from "../../api/recipeApi";
+import {
+  getReviews,
+  postReview,
+  deleteReview,
+  updateReview,
+} from "../../api/reviewApi";
+import backIcon from "../../assets/recipe/back.png";
 
 export default function RecipeDetailPage() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // 더미 데이터
-  const recipe = recipesDetail;
+  const [recipe, setRecipe] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const categoryColors = {
+    밥: "bg-[#BBE491]/50",
+    "국&찌개": "bg-[#E491BB]/50",
+    반찬: "bg-[#91BBE4]/50",
+    디저트: "bg-[#FFD1DC]/50",
+  };
 
   // 리뷰 관련 상태
-  const [reviews, setReviews] = useState(recipe.reviews);
+  const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState("");
   const [editId, setEditId] = useState(null);
   const [editText, setEditText] = useState("");
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const fetchDetail = async () => {
+      try {
+        const data = await getRecipeDetail(id);
+
+        // API → 기존 UI 형태로 변환
+        const mapped = {
+          ...data,
+
+          // 이미지 매핑
+          image: data.imgLarge || data.imgSmall,
+
+          // UI에서 recipe.color를 기대하므로 더미 색상
+          color: categoryColors[data.category] || "bg-gray-200",
+
+          // 영양성분 UI에 맞춰 nutrients 객체 생성
+          nutrients: {
+            열량: `${data.kcal} kcal`,
+            탄수화물: `${data.carbohydrate} g`,
+            단백질: `${data.protein} g`,
+            지방: `${data.fat} g`,
+            나트륨: `${data.sodium} mg`,
+          },
+
+          // 재료 매핑
+          ingredients: data.ingredients.map((i) => ({
+            name: i.name,
+            buyable: i.linkUrl !== null,
+            link: i.linkUrl,
+          })),
+
+          // 메뉴얼 → steps로 매핑 (순서 정렬 필수)
+          steps: data.manuals
+            .sort((a, b) => a.cookOrder - b.cookOrder)
+            .map((m) => m.cookMethod),
+
+          // 리뷰는 아직 없으면 빈 배열
+          reviews: data.reviews || [],
+        };
+
+        setRecipe(mapped);
+      } catch (err) {
+        console.error("레시피 상세 조회 실패:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDetail();
+  }, [id]);
+
+  // 리뷰 목록 불러오기
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!recipe) return;
+
+      try {
+        const data = await getReviews(id);
+        setReviews(data);
+      } catch (err) {
+        console.error("리뷰 조회 실패:", err);
+      }
+    };
+
+    fetchReviews();
+  }, [recipe, id]);
 
   // 리뷰 등록
-  const handleAddReview = () => {
+  const handleAddReview = async () => {
     if (!newReview.trim()) return;
-    const newEntry = {
-      id: Date.now(),
-      user: "익명 사용자",
-      text: newReview,
-      date: new Date().toISOString().split("T")[0],
-    };
-    setReviews([newEntry, ...reviews]);
-    setNewReview("");
+
+    try {
+      const created = await postReview(id, userName, newReview);
+      setReviews([created, ...reviews]);
+      setUserName(""); 
+      setNewReview("");
+    } catch (err) {
+      console.error("리뷰 등록 실패:", err);
+    }
   };
 
   // 리뷰 삭제
-  const handleDeleteReview = (id) => {
-    setReviews(reviews.filter((r) => r.id !== id));
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      await deleteReview(id, reviewId);
+      setReviews(reviews.filter((r) => r.id !== reviewId));
+    } catch (err) {
+      console.error("리뷰 삭제 실패:", err);
+    }
   };
 
-  // 수정모드 진입
-  const handleEditClick = (id, text) => {
-    setEditId(id);
+  // 수정 모드 진입
+  const handleEditClick = (reviewId, text) => {
+    setEditId(reviewId);
     setEditText(text);
   };
 
-  // 수정 완료
-  const handleEditSave = (id) => {
-    setReviews(
-      reviews.map((r) => (r.id === id ? { ...r, text: editText } : r))
-    );
-    setEditId(null);
-    setEditText("");
+  // 리뷰 수정
+  const handleEditSave = async (reviewId) => {
+    try {
+      const updated = await updateReview(id, reviewId, editText);
+      setReviews(reviews.map((r) => (r.id === reviewId ? updated : r)));
+      setEditId(null);
+      setEditText("");
+    } catch (err) {
+      console.error("리뷰 수정 실패:", err);
+    }
   };
+
+  if (loading) {
+    return <div className="text-center mt-10">불러오는 중...</div>;
+  }
+
+  if (!recipe) {
+    return <div className="text-center mt-10">레시피가 없습니다.</div>;
+  }
 
   return (
     <div className="relative min-h-screen bg-grayBg font-['Noto_Sans_KR'] flex flex-col">
@@ -58,7 +157,7 @@ export default function RecipeDetailPage() {
           className="absolute left-4 flex items-center"
         >
           <img
-            src="/src/assets/recipe/back.png"
+            src={backIcon} // ← import한 이미지 사용
             alt="back"
             className="w-3 h-4"
           />
@@ -117,7 +216,7 @@ export default function RecipeDetailPage() {
           <section className="mt-6">
             <h2 className="font-medium text-[15px] text-black mb-2">[재료]</h2>
             <hr className="border-[#E5E5E5] mb-2" />
-            <ul className="space-y-2">
+            <ol className="space-y-2">
               {recipe.ingredients.map((ing, i) => (
                 <li key={i} className="flex justify-between items-center">
                   <span className="text-[14px] text-black">• {ing.name}</span>
@@ -138,7 +237,7 @@ export default function RecipeDetailPage() {
                   )}
                 </li>
               ))}
-            </ul>
+            </ol>
           </section>
 
           {/* 조리법 */}
@@ -149,7 +248,7 @@ export default function RecipeDetailPage() {
             <hr className="border-[#E5E5E5] mb-2" />
             <ol className="list-decimal pl-4 space-y-2 text-[14px] text-black">
               {recipe.steps.map((step, i) => (
-                <li key={i}>{step}</li>
+                <p key={i}>{step}</p>
               ))}
             </ol>
           </section>
@@ -160,6 +259,15 @@ export default function RecipeDetailPage() {
               [리뷰 작성]
             </h2>
             <hr className="border-[#E5E5E5] mb-2" />
+            
+            <input
+              type="text"
+              placeholder="작성자명"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              className="w-32 border border-gray-300 rounded-md p-2 text-[14px] mb-2 focus:outline-none"
+            />
+
             <textarea
               placeholder="리뷰를 입력하세요."
               value={newReview}
@@ -185,7 +293,7 @@ export default function RecipeDetailPage() {
                 className="bg-[#F6F6F6] p-3 rounded-md mb-2 text-[14px]"
               >
                 <div className="flex justify-between items-center mb-1">
-                  <span className="font-medium text-black">{r.user}</span>
+                  <span className="font-medium text-black">{r.userName}</span>
                   <div className="flex space-x-2">
                     <img
                       src="/src/assets/recipe/pencil.png"

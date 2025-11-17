@@ -19,7 +19,7 @@ export default function RecipeCard({ item }) {
     >
       {/* 이미지 */}
       <img
-        src={item.image}
+        src={item.imgSmall}
         alt={item.name}
         className="w-16 h-16 rounded-md object-cover flex-shrink-0"
       />

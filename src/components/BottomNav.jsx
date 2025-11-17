@@ -42,7 +42,7 @@ export default function BottomNav({ active }) {
 
 function NavItem({ to, src, label, active, activeColor = "#000000" }) {
   return (
-    <Link to={to} className="flex flex-col items-center">
+    <Link to={to} className="flex-1 flex flex-col items-center">
       <img src={src} alt={label} className="w-6 h-6" />
       <span
         className="text-[13px] mt-1"
