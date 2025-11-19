@@ -19,9 +19,9 @@ export const postReview = async (recipeId, userName, text) => {
 // 리뷰 수정
 export const updateReview = async (recipeId, reviewId, userName, text) => {
   const res = await axiosInstance.put(`/recipes/${recipeId}/reviews/${reviewId}`, {
-    recipeId,
-    userName,
-    text,
+      recipeId,
+      userName,
+      text,
   });
   return res.data; // 수정된 리뷰 객체
 };

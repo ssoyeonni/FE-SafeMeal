@@ -122,17 +122,19 @@ export default function RecipeDetailPage() {
   };
 
   // 수정 모드 진입
-  const handleEditClick = (reviewId, text) => {
-    setEditId(reviewId);
-    setEditText(text);
-  };
+  const handleEditClick = (reviewId, text, userName) => {
+  setEditId(reviewId);
+  setUserName(userName); 
+  setEditText(text);
+};
 
   // 리뷰 수정
   const handleEditSave = async (reviewId) => {
     try {
-      const updated = await updateReview(id, reviewId, editText);
+      const updated = await updateReview(id, reviewId, userName, editText);
       setReviews(reviews.map((r) => (r.id === reviewId ? updated : r)));
       setEditId(null);
+      setUserName("");
       setEditText("");
     } catch (err) {
       console.error("리뷰 수정 실패:", err);
@@ -299,7 +301,7 @@ export default function RecipeDetailPage() {
                       src="/src/assets/recipe/pencil.png"
                       alt="edit"
                       className="w-4 h-4 cursor-pointer"
-                      onClick={() => handleEditClick(r.id, r.text)}
+                      onClick={() => handleEditClick(r.id, r.text, r.userName)}
                     />
                     <img
                       src="/src/assets/recipe/trashcan.png"
