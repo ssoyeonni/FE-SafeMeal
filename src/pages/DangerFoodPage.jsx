@@ -56,7 +56,7 @@ export default function DangerFoodPage() {
   }, []);
 
   return (
-    <>
+    <div className="w-full max-w-[430px] mx-auto">
       {loading && <p className="text-center text-gray-500">불러오는 중...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
       {!loading && !error && dangerFoods.length === 0 && (
@@ -67,6 +67,6 @@ export default function DangerFoodPage() {
       {dangerFoods.map((item) => (
         <DangerFoodCard key={item.id} item={item} />
       ))}
-    </>
+    </div>
   );
 }

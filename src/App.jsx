@@ -1,44 +1,58 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { useMemo } from "react";
 import RecipeList from "./pages/Recipe/List";
 import RecipeDetail from "./pages/Recipe/Detail";
 import DangerFoodPage from "./pages/DangerFoodPage";
 import ShortFormPage from "./pages/ShortFormPage";
 import BottomNav from "./components/BottomNav";
+import dangerBlack from "./assets/danger-icon-black.png";
+import shortBlack from "./assets/short-icon-black.png";
+import recipeBlack from "./assets/recipe-icon-black.png";
 
 function Header() {
   const location = useLocation();
 
-  // Header
   const headerInfo = useMemo(() => {
     if (location.pathname.startsWith("/danger-food")) {
       return {
         title: "위험식품",
-        icon: "/src/assets/danger-icon-black.png",
+        icon: dangerBlack,
       };
     } else if (location.pathname.startsWith("/short-form")) {
       return {
         title: "숏폼",
-        icon: "/src/assets/short-icon-black.png",
+        icon: shortBlack,
       };
     } else if (location.pathname.startsWith("/recipe")) {
       return {
         title: "레시피",
-        icon: "/src/assets/recipe-icon-black.png",
+        icon: recipeBlack,
       };
     } else {
       return {
         title: "레시피",
-        icon: "/src/assets/recipe-icon-black.png",
+        icon: recipeBlack,
       };
     }
   }, [location.pathname]);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-20 bg-light shadow-sm shadow-black/10 flex justify-center items-center py-6">
+    <header
+      className="fixed top-0 left-0 right-0 mx-auto w-full max-w-[430px] z-20 bg-light shadow-sm shadow-black/10 
+    flex justify-center items-center py-6"
+    >
       <div className="flex items-center space-x-2">
-        {headerInfo.icon && <img src={headerInfo.icon} alt="icon" className="w-7 h-7" />}
-        <span className="text-xl font-medium text-black">{headerInfo.title}</span>
+        {headerInfo.icon && (
+          <img src={headerInfo.icon} alt="icon" className="w-7 h-7" />
+        )}
+        <span className="text-xl font-medium text-black">
+          {headerInfo.title}
+        </span>
       </div>
     </header>
   );
@@ -76,10 +90,13 @@ export default function App() {
   }, [location.pathname]);
 
   return (
-    <div className="relative min-h-screen bg-grayBg font-['Noto_Sans_KR'] flex flex-col">
+    <div
+      className="relative min-h-screen bg-grayBg font-['Noto_Sans_KR'] flex flex-col
+                  max-w-[430px] mx-auto shadow-xl border border-gray-200"
+    >
       <Header />
       <MainContent />
-      <div className="fixed bottom-0 left-0 w-full z-20">
+      <div className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-[430px]">
         <BottomNav active={activeNav} />
       </div>
     </div>

@@ -60,7 +60,7 @@ export default function ShortFormPage() {
 
   return (
     <div
-      className="fixed top-0 left-0 w-full h-[calc(100vh-72px)] bg-black overflow-hidden flex items-center justify-center"
+      className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] h-[calc(100vh-72px)] bg-black overflow-hidden flex items-center justify-center"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >

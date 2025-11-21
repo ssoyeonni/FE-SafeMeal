@@ -8,6 +8,10 @@ import {
   updateReview,
 } from "../../api/reviewApi";
 import backIcon from "../../assets/recipe/back.png";
+import recipeBlack from "../../assets/recipe-icon-black.png";
+import cartIcon from "../../assets/recipe/cart.png";
+import pencilIcon from "../../assets/recipe/pencil.png";
+import trashIcon from "../../assets/recipe/trashcan.png";
 
 export default function RecipeDetailPage() {
   const navigate = useNavigate();
@@ -152,30 +156,28 @@ export default function RecipeDetailPage() {
   return (
     <div className="relative min-h-screen bg-grayBg font-['Noto_Sans_KR'] flex flex-col">
       {/* Header (RecipePage와 동일 디자인 + back 버튼 추가) */}
-      <header className="fixed top-0 left-0 w-full z-20 bg-light shadow-sm shadow-black/10 flex justify-center items-center py-6">
-        {/* Back 아이콘 (왼쪽 상단) */}
+      <header
+        className="
+          fixed top-0 left-0 right-0 mx-auto 
+          w-full max-w-[430px] 
+          z-20 bg-light shadow-sm shadow-black/10
+          flex justify-center items-center py-6
+        "
+      >
+        {/* Back 버튼 */}
         <button
           onClick={() => navigate("/")}
           className="absolute left-4 flex items-center"
         >
-          <img
-            src={backIcon} // ← import한 이미지 사용
-            alt="back"
-            className="w-3 h-4"
-          />
+          <img src={backIcon} alt="back" className="w-3 h-4" />
         </button>
 
         {/* 기존 RecipePage와 동일 */}
         <div className="flex items-center space-x-2">
-          <img
-            src="/src/assets/recipe-icon-black.png"
-            alt="recipe"
-            className="w-7 h-7"
-          />
+          <img src={recipeBlack} alt="recipe" className="w-7 h-7" />
           <span className="text-xl font-medium text-black">레시피</span>
         </div>
       </header>
-
       {/* 메인 컨텐츠 */}
       <main className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-grayBg mt-[84px] mb-[72px]">
         <div className="card-base">
@@ -230,7 +232,7 @@ export default function RecipeDetailPage() {
                       className="flex items-center space-x-1 border border-gray-300 px-2 py-[2px] rounded-md text-[11px] text-black"
                     >
                       <img
-                        src="/src/assets/recipe/cart.png"
+                        src={cartIcon}
                         alt="cart"
                         className="w-3 h-3"
                       />
@@ -298,13 +300,13 @@ export default function RecipeDetailPage() {
                   <span className="font-medium text-black">{r.userName}</span>
                   <div className="flex space-x-2">
                     <img
-                      src="/src/assets/recipe/pencil.png"
+                      src={pencilIcon}
                       alt="edit"
                       className="w-4 h-4 cursor-pointer"
                       onClick={() => handleEditClick(r.id, r.text, r.userName)}
                     />
                     <img
-                      src="/src/assets/recipe/trashcan.png"
+                      src={trashIcon}
                       alt="delete"
                       className="w-4 h-4 cursor-pointer"
                       onClick={() => handleDeleteReview(r.id)}
