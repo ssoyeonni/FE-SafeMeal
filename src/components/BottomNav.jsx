@@ -1,37 +1,32 @@
 import { Link } from "react-router-dom";
 
+import dangerBlack from "../assets/danger-icon-black.png";
+import dangerOrange from "../assets/danger-icon-orange.png";
+import recipeBlack from "../assets/recipe-icon-black.png";
+import recipeOrange from "../assets/recipe-icon-orange.png";
+import shortBlack from "../assets/short-icon-black.png";
+import shortOrange from "../assets/short-icon-orange.png";
+
 export default function BottomNav({ active }) {
   return (
     <nav className="flex justify-around items-center bg-[#FBFBFB] py-3 shadow-[0_-2px_4px_rgba(0,0,0,0.05)]">
       <NavItem
         to="/danger-food"
-        src={
-          active === "dangerFood"
-            ? "/src/assets/danger-icon-orange.png"
-            : "/src/assets/danger-icon-black.png"
-        }
+        src={active === "dangerFood" ? dangerOrange : dangerBlack}
         label="위험 식품"
         active={active === "dangerFood"}
         activeColor="#EB8601"
       />
       <NavItem
         to="/"
-        src={
-          active === "recipe"
-            ? "/src/assets/recipe-icon-orange.png"
-            : "/src/assets/recipe-icon-black.png"
-        }
+        src={active === "recipe" ? recipeOrange : recipeBlack}
         label="레시피"
         active={active === "recipe"}
         activeColor="#EB8601"
       />
       <NavItem
         to="/short-form"
-        src={
-          active === "shortForm"
-            ? "/src/assets/short-icon-orange.png"
-            : "/src/assets/short-icon-black.png"
-        }
+        src={active === "shortForm" ? shortOrange : shortBlack}
         label="숏폼"
         active={active === "shortForm"}
         activeColor="#EB8601"
